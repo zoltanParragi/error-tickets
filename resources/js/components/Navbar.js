@@ -8,9 +8,8 @@ export default function Navbar() {
 
     const onLogout = (e) => {
         e.preventDefault()
-    
         fetch('/api/logout')
-        .then(res => {
+        .then(() => {
             setUser(null)
         })
       }

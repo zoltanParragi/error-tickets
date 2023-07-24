@@ -9,8 +9,6 @@ export default function Tickets() {
 
     const handleSortOrFilter = (event) => {
         if(event.target.value == 'default') {
-            //setSelectedClient('')
-            //setSelectedSortOption('')
             setSortedOrFilteredTickets(tickets)
         } else if (event.target.value == 'date-inc') {
             setSelectedClient('')
@@ -68,8 +66,8 @@ export default function Tickets() {
             <div className='row justify-content-around mt-5 mb-5'>
                 <div className='col-4'>
                     <label className='mb-2' htmlFor="selectFilterInput">Szűrés ügyfél szerint:</label>
-                    <select class="form-select inline-block" aria-label="filter select" id="selectFilterInput" value={selectedClient} onChange={(e) => handleSortOrFilter(e)}>
-                        <option selected value="default">Válassz egy ügyfelet</option>
+                    <select className="form-select inline-block" aria-label="filter select" id="selectFilterInput" value={selectedClient} onChange={(e) => handleSortOrFilter(e)}>
+                        <option defaultValue value="default">Válassz egy ügyfelet</option>
                         {clients && clients.map((client, i) => (
                             <option key={client + i} value={client}>
                                 {client}
@@ -79,18 +77,9 @@ export default function Tickets() {
                 </div>
                 
                 <div className='col-4'>
-                    {/* <label htmlFor="selectSortInput">Rendezés:</label>
-                    <select id="selectsortInput" value={selectedClient} onChange={(e) => handleSortOrFilter(e)}>
-                        <option value="">Válassz egy ügyfelet</option>
-                        {clients && clients.map((client, i) => (
-                            <option key={client + i} value={client}>
-                                {client}
-                            </option>
-                        ))}
-                    </select> */}
                     <label className='mb-2' htmlFor="selectSortInput">Rendezés:</label>
-                    <select  class="form-select"aria-label="sort select" id="selectsortInput" value={selectedSortOption} onChange={(e) => handleSortOrFilter(e)}>
-                        <option value="default">Válassz rendezési módot:</option>
+                    <select  className="form-select"aria-label="sort select" id="selectsortInput" value={selectedSortOption} onChange={(e) => handleSortOrFilter(e)}>
+                        <option defaultValue value="default">Válassz rendezési módot:</option>
                         <option value="date-inc">Létrehozás dátuma szerint növekvő</option>
                         <option value="date-des">Létrehozás dátuma szerint csökkenő</option>
                         <option value="due-date-inc">Határidő szerint növekvő</option>
@@ -98,6 +87,7 @@ export default function Tickets() {
                     </select>
                 </div>
             </div>
+
             <table className='table'>
                 <thead>
                     <tr>

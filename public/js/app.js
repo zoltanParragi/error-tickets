@@ -9194,9 +9194,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-//import Register from './components/Register';
-//import Login from './components/Login';
-//import Profile from './components/Profile';
+
 
 
 
@@ -9208,6 +9206,9 @@ __webpack_require__.r(__webpack_exports__);
 
 function Main() {
   ;
+  var _useStateContext = (0,_ContextProvider__WEBPACK_IMPORTED_MODULE_8__.useStateContext)(),
+    user = _useStateContext.user,
+    setUser = _useStateContext.setUser;
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_ContextProvider__WEBPACK_IMPORTED_MODULE_8__.ContextProvider, {
     children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsxs)(react_router_dom__WEBPACK_IMPORTED_MODULE_10__.BrowserRouter, {
       children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)(_components_Navbar__WEBPACK_IMPORTED_MODULE_3__["default"], {}), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_9__.jsx)("div", {
@@ -9722,7 +9723,7 @@ function Navbar() {
     setUser = _useStateContext.setUser;
   var onLogout = function onLogout(e) {
     e.preventDefault();
-    fetch('/api/logout').then(function (res) {
+    fetch('/api/logout').then(function () {
       setUser(null);
     });
   };
@@ -9816,8 +9817,6 @@ function Tickets() {
     setSelectedSortOption = _useState10[1];
   var handleSortOrFilter = function handleSortOrFilter(event) {
     if (event.target.value == 'default') {
-      //setSelectedClient('')
-      //setSelectedSortOption('')
       setSortedOrFilteredTickets(tickets);
     } else if (event.target.value == 'date-inc') {
       setSelectedClient('');
@@ -9887,7 +9886,7 @@ function Tickets() {
           htmlFor: "selectFilterInput",
           children: "Sz\u0171r\xE9s \xFCgyf\xE9l szerint:"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
-          "class": "form-select inline-block",
+          className: "form-select inline-block",
           "aria-label": "filter select",
           id: "selectFilterInput",
           value: selectedClient,
@@ -9895,7 +9894,7 @@ function Tickets() {
             return handleSortOrFilter(e);
           },
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
-            selected: true,
+            defaultValue: true,
             value: "default",
             children: "V\xE1lassz egy \xFCgyfelet"
           }), clients && clients.map(function (client, i) {
@@ -9912,7 +9911,7 @@ function Tickets() {
           htmlFor: "selectSortInput",
           children: "Rendez\xE9s:"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
-          "class": "form-select",
+          className: "form-select",
           "aria-label": "sort select",
           id: "selectsortInput",
           value: selectedSortOption,
@@ -9920,6 +9919,7 @@ function Tickets() {
             return handleSortOrFilter(e);
           },
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            defaultValue: true,
             value: "default",
             children: "V\xE1lassz rendez\xE9si m\xF3dot:"
           }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {

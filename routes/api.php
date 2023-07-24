@@ -6,6 +6,8 @@ use App\Models\Ticket;
 use App\Models\Client;
 use Illuminate\Validation\ValidationException;
 use App\Http\Controllers\TicketController;
+use App\Http\Controllers\LoginController;
+use App\Http\Controllers\GetdataController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,55 +24,16 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::post('/login', function(Request $request) {
-    $result = Auth::attempt(['email'=>$request->email, 'password'=>$request->password]);
+Route::post('/login', [LoginController::class, 'login'])->name('login');
 
-    if( !$result) {
-        return response(['status'=>'error', 'message'=>__('Sikertelen belépés!')]);
-    } else {
-        return response(['status'=>'success', 'user'=> Auth::user()]); 
-    }
-})->name('login');
+Route::post('/addticket', [TicketController::class, 'addticket'])->name('addticket');
 
-Route::get('/logout', function() {
-    Auth::logout();
-    return response(['status'=>'success']);
-})->name('logout');
-
-Route::post('/addticket', [TicketController::class, 'addticket']);
-/* Route::post('/addticket', function(Request $request) {
-    try {
-    $validated = $request->validate([
-        'name' => 'required|min:3|max:30|exists:clients,name', 
-        'email' => 'required|email|min:3|exists:clients,email',
-        'subject'=> 'required|min:3|max:200',
-        'content'=> 'required|min:5|max:1000',
-    ]);
-    } catch (ValidationException $e) {
-        return response(['errors'=>$e->errors()], 422);
-    }
-
-    Ticket::create($validated);
-
-    return response(['status'=>'success']);
-})->name('addticket'); */
-
-Route::get('/getclients', function() {
-    $clients = Client::get();
-    return response(['clients'=> $clients]);
-})->name('getclients');
-
-Route::get('/gettickets', function() {
-    $tickets = Ticket::get();
-    return response(['tickets'=> $tickets]);
-})->name('gettickets');
-
-
-
-/* 
 Route::group(['middleware' => 'auth:sanctum'], function () {
-        Route::post('/logout', [App\Http\Controllers\Api\LoginController::class, 'logout']);
-        Route::post('/me', [App\Http\Controllers\Api\LoginController::class, 'me']);
-    });
 
-*/
+    Route::get('/getclients', [GetdataController::class, 'getclients'])->name('getclients');
+
+    Route::get('/gettickets', [GetdataController::class, 'gettickets'])->name('gettickets');
+
+    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
+});
+
