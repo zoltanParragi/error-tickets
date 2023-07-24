@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\Ticket;
 use App\Models\Client;
 use Illuminate\Validation\ValidationException;
+use App\Http\Controllers\TicketController;
 
 /*
 |--------------------------------------------------------------------------
@@ -36,7 +37,8 @@ Route::get('/logout', function() {
     return response(['status'=>'success']);
 })->name('logout');
 
-Route::post('/addticket', function(Request $request) {
+Route::post('/addticket', [TicketController::class, 'addticket']);
+/* Route::post('/addticket', function(Request $request) {
     try {
     $validated = $request->validate([
         'name' => 'required|min:3|max:30|exists:clients,name', 
@@ -51,7 +53,7 @@ Route::post('/addticket', function(Request $request) {
     Ticket::create($validated);
 
     return response(['status'=>'success']);
-})->name('addticket');
+})->name('addticket'); */
 
 Route::get('/getclients', function() {
     $clients = Client::get();

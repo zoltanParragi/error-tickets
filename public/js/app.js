@@ -9150,7 +9150,7 @@ var StateContext = /*#__PURE__*/(0,react__WEBPACK_IMPORTED_MODULE_0__.createCont
 });
 var ContextProvider = function ContextProvider(_ref) {
   var children = _ref.children;
-  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(localStorage.getItem('user')),
+  var _useState = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(),
     _useState2 = _slicedToArray(_useState, 2),
     user = _useState2[0],
     setUser = _useState2[1];
@@ -9364,7 +9364,9 @@ function AddTicket() {
       return res.json();
     }).then(function (res) {
       if (res.status === "success") {
-        navigate('/add-ticket');
+        console.log(res.status);
+        setInput({});
+        setResult(res);
       } else {
         setResult(res);
       }
@@ -9384,6 +9386,9 @@ function AddTicket() {
         children: [result !== null && result.status === "error" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
           className: "alert alert-danger",
           children: result.message
+        }), result !== null && result.status === "success" && /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
+          className: "alert alert-success",
+          children: "Sikeres ment\xE9s"
         }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("div", {
           className: "card",
           children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsx)("div", {
@@ -9719,7 +9724,6 @@ function Navbar() {
     e.preventDefault();
     fetch('/api/logout').then(function (res) {
       setUser(null);
-      localStorage.clear();
     });
   };
   return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_2__.jsxs)("nav", {
@@ -9794,16 +9798,66 @@ function Tickets() {
     _useState2 = _slicedToArray(_useState, 2),
     tickets = _useState2[0],
     setTickets = _useState2[1];
-  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+  var _useState3 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(null),
     _useState4 = _slicedToArray(_useState3, 2),
-    selectedClient = _useState4[0],
-    setSelectedClient = _useState4[1];
-  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+    sortedOrFilteredTickets = _useState4[0],
+    setSortedOrFilteredTickets = _useState4[1];
+  var _useState5 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
     _useState6 = _slicedToArray(_useState5, 2),
-    clients = _useState6[0],
-    setClients = _useState6[1];
-  var handleSelectClient = function handleSelectClient(event) {
-    setSelectedClient(event.target.value.name);
+    selectedClient = _useState6[0],
+    setSelectedClient = _useState6[1];
+  var _useState7 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)([]),
+    _useState8 = _slicedToArray(_useState7, 2),
+    clients = _useState8[0],
+    setClients = _useState8[1];
+  var _useState9 = (0,react__WEBPACK_IMPORTED_MODULE_0__.useState)(''),
+    _useState10 = _slicedToArray(_useState9, 2),
+    selectedSortOption = _useState10[0],
+    setSelectedSortOption = _useState10[1];
+  var handleSortOrFilter = function handleSortOrFilter(event) {
+    if (event.target.value == 'default') {
+      //setSelectedClient('')
+      //setSelectedSortOption('')
+      setSortedOrFilteredTickets(tickets);
+    } else if (event.target.value == 'date-inc') {
+      setSelectedClient('');
+      setSelectedSortOption(event.target.value);
+      sortedOrFilteredTickets ? setSortedOrFilteredTickets(sortedOrFilteredTickets.sort(function (a, b) {
+        return new Date(a.created_at) - new Date(b.created_at);
+      })) : setSortedOrFilteredTickets(tickets.sort(function (a, b) {
+        return new Date(a.created_at) - new Date(b.created_at);
+      }));
+    } else if (event.target.value == 'date-des') {
+      setSelectedClient('');
+      setSelectedSortOption(event.target.value);
+      sortedOrFilteredTickets ? setSortedOrFilteredTickets(sortedOrFilteredTickets.sort(function (a, b) {
+        return new Date(b.created_at) - new Date(a.created_at);
+      })) : setSortedOrFilteredTickets(tickets.sort(function (a, b) {
+        return new Date(b.created_at) - new Date(a.created_at);
+      }));
+    } else if (event.target.value == 'due-date-inc') {
+      setSelectedClient('');
+      setSelectedSortOption(event.target.value);
+      sortedOrFilteredTickets ? setSortedOrFilteredTickets(sortedOrFilteredTickets.sort(function (a, b) {
+        return new Date(a.due_date) - new Date(b.due_date);
+      })) : setSortedOrFilteredTickets(tickets.sort(function (a, b) {
+        return new Date(a.due_date) - new Date(b.due_date);
+      }));
+    } else if (event.target.value == 'due-date-des') {
+      setSelectedClient('');
+      setSelectedSortOption(event.target.value);
+      sortedOrFilteredTickets ? setSortedOrFilteredTickets(sortedOrFilteredTickets.sort(function (a, b) {
+        return new Date(b.due_date) - new Date(a.due_date);
+      })) : setSortedOrFilteredTickets(tickets.sort(function (a, b) {
+        return new Date(b.due_date) - new Date(a.due_date);
+      }));
+    } else {
+      setSelectedSortOption('');
+      setSelectedClient(event.target.value);
+      setSortedOrFilteredTickets(tickets.filter(function (ticket) {
+        return ticket.name == event.target.value;
+      }));
+    }
   };
   (0,react__WEBPACK_IMPORTED_MODULE_0__.useEffect)(function () {
     fetch('/sanctum/csrf-cookie');
@@ -9811,6 +9865,7 @@ function Tickets() {
       return res.json();
     }).then(function (res) {
       setTickets(res.tickets);
+      setSortedOrFilteredTickets(res.tickets);
       var clientsArr = [];
       res.tickets.forEach(function (ticket) {
         if (!clientsArr.includes(ticket.name)) {
@@ -9824,22 +9879,63 @@ function Tickets() {
     children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("h1", {
       children: "Hibajegyek"
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
-      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
-        htmlFor: "selectInput",
-        children: "V\xE1lassz egy \xFCgyfelet:"
-      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
-        id: "selectInput",
-        value: selectedClient,
-        onChange: handleSelectClient,
-        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
-          value: "",
-          children: "V\xE1lassz egy \xFCgyfelet"
-        }), clients && console.log(clients), clients && clients.map(function (client, i) {
-          return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
-            value: client,
-            children: client
-          }, client + i);
-        }), console.log(selectedClient)]
+      className: "row justify-content-around mt-5 mb-5",
+      children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+        className: "col-4",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
+          className: "mb-2",
+          htmlFor: "selectFilterInput",
+          children: "Sz\u0171r\xE9s \xFCgyf\xE9l szerint:"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
+          "class": "form-select inline-block",
+          "aria-label": "filter select",
+          id: "selectFilterInput",
+          value: selectedClient,
+          onChange: function onChange(e) {
+            return handleSortOrFilter(e);
+          },
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            selected: true,
+            value: "default",
+            children: "V\xE1lassz egy \xFCgyfelet"
+          }), clients && clients.map(function (client, i) {
+            return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+              value: client,
+              children: client
+            }, client + i);
+          })]
+        })]
+      }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("div", {
+        className: "col-4",
+        children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("label", {
+          className: "mb-2",
+          htmlFor: "selectSortInput",
+          children: "Rendez\xE9s:"
+        }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("select", {
+          "class": "form-select",
+          "aria-label": "sort select",
+          id: "selectsortInput",
+          value: selectedSortOption,
+          onChange: function onChange(e) {
+            return handleSortOrFilter(e);
+          },
+          children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: "default",
+            children: "V\xE1lassz rendez\xE9si m\xF3dot:"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: "date-inc",
+            children: "L\xE9trehoz\xE1s d\xE1tuma szerint n\xF6vekv\u0151"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: "date-des",
+            children: "L\xE9trehoz\xE1s d\xE1tuma szerint cs\xF6kken\u0151"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: "due-date-inc",
+            children: "Hat\xE1rid\u0151 szerint n\xF6vekv\u0151"
+          }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("option", {
+            value: "due-date-des",
+            children: "Hat\xE1rid\u0151 szerint cs\xF6kken\u0151"
+          })]
+        })]
       })]
     }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("table", {
       className: "table",
@@ -9858,7 +9954,7 @@ function Tickets() {
           })]
         })
       }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tbody", {
-        children: tickets && tickets.map(function (ticket, index) {
+        children: sortedOrFilteredTickets && sortedOrFilteredTickets.map(function (ticket, index) {
           return /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)(react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.Fragment, {
             children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("tr", {
               className: "table-row",
@@ -9873,16 +9969,16 @@ function Tickets() {
               }), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("td", {
                 children: [ticket.due_date, " "]
               })]
-            }, index), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tr", {
+            }, index + ticket.name), /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("tr", {
               className: "table-row",
               children: /*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsxs)("td", {
-                colspan: "5",
+                colSpan: "5",
                 children: [/*#__PURE__*/(0,react_jsx_runtime__WEBPACK_IMPORTED_MODULE_1__.jsx)("i", {
                   className: "me-4",
                   children: "Hiba le\xEDr\xE1sa: "
                 }), ticket.content, " "]
               })
-            })]
+            }, index + ticket.subject)]
           });
         })
       })]

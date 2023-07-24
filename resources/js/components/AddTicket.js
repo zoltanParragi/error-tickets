@@ -28,7 +28,9 @@ function AddTicket() {
         })
         .then(res => {
             if(res.status === "success") {
-                navigate('/add-ticket')
+                console.log(res.status)
+                setInput({})
+                setResult(res)
             } else {
                 setResult(res)
             }
@@ -47,6 +49,7 @@ function AddTicket() {
             <div className="row justify-content-center">
                 <div className="col-md-6 col-lg-4">
                 {(result !== null && result.status === "error") && <div className="alert alert-danger">{result.message}</div>}
+                {(result !== null && result.status === "success") && <div className="alert alert-success">Sikeres mentés</div>}
                     <div className="card">
                         <div className="card-header">
                             Új hibajegy rögzítése
