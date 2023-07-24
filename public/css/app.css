@@ -11975,3 +11975,14 @@ textarea.form-control-lg {
 .table-row:nth-of-type(4n+1), .table-row:nth-of-type(4n+2) {
   background: rgb(207, 207, 207);
 }
+
+.client-table tbody tr:nth-child(2n) {
+  background: rgb(207, 207, 207);
+}
+
+thead tr {
+  letter-spacing: 2px;
+  font-weight: normal;
+  color: white;
+  background: rgb(32, 32, 32);
+}

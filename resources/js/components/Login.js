@@ -6,7 +6,7 @@ import { useStateContext } from '../ContextProvider';
 function Login() {
     const [input, setInput] = useState({})
     const [result, setResult] = useState(null)
-    const { setUser } = useStateContext()
+    const { user, setUser } = useStateContext()
 
     const navigate = useNavigate()
 
@@ -46,31 +46,34 @@ function Login() {
 
     return (
         <div className="container">
-            <div className="row justify-content-center">
-                <div className="col-md-6 col-lg-4">
-                {(result !== null && result.status === "error") && <div className="alert alert-danger">{result.message}</div>}
-                    <div className="card">
-                        <div className="card-header">
-                            Belépés
-                        </div>
-                        <form className="card-body" onSubmit={handleSubmit}>
-                            <div className="row g-4">
-                                <div className='col-12'>
-                                    <label htmlFor="email" className="form-label">Email</label>
-                                    <input type="text" id="email" className="form-control" onChange={handleChange} value={input.email}/> 
-                                </div>
-                                <div className='col-12'>
-                                    <label htmlFor="password" className="form-label">Jelszó</label>
-                                    <input type="password" id="password" className="form-control" onChange={handleChange} />
-                                </div>
-                                <div className='col-12 text-center'>
-                                    <button className="btn btn-success">Belépés</button>
-                                </div>
+            {user 
+                ? <div className='col-md-8 mx-auto'><h2 className='text-center'>A megtekintéshez ki kell lépned.</h2></div>
+                : <div className="row justify-content-center">
+                    <div className="col-md-6 col-lg-4">
+                    {(result !== null && result.status === "error") && <div className="alert alert-danger">{result.message}</div>}
+                        <div className="card">
+                            <div className="card-header">
+                                Belépés
                             </div>
-                        </form>
+                            <form className="card-body" onSubmit={handleSubmit}>
+                                <div className="row g-4">
+                                    <div className='col-12'>
+                                        <label htmlFor="email" className="form-label">Email</label>
+                                        <input type="text" id="email" className="form-control" onChange={handleChange} value={input.email}/> 
+                                    </div>
+                                    <div className='col-12'>
+                                        <label htmlFor="password" className="form-label">Jelszó</label>
+                                        <input type="password" id="password" className="form-control" onChange={handleChange} />
+                                    </div>
+                                    <div className='col-12 text-center'>
+                                        <button className="btn btn-success">Belépés</button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
         </div>
     );
 }

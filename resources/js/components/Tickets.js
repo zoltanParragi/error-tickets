@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import { useStateContext } from '../ContextProvider'
 
 export default function Tickets() {
     const [tickets, setTickets] = useState(null)
@@ -6,6 +7,7 @@ export default function Tickets() {
     const [selectedClient, setSelectedClient] = useState('');
     const [clients, setClients] = useState([]);
     const [selectedSortOption, setSelectedSortOption] = useState('')
+    const { user } = useStateContext()
 
     const handleSortOrFilter = (event) => {
         if(event.target.value == 'default') {
@@ -61,60 +63,64 @@ export default function Tickets() {
 
     return (
         <div>
-            <h1>Hibajegyek</h1>
+            <h1 className='text-center'>Hibajegyek</h1>
+            
+            {!user 
+			    ? <div className='col-md-8 mx-auto'><h2 className='text-center'>A megtekintéshez be kell lépned.</h2></div>
 
-            <div className='row justify-content-around mt-5 mb-5'>
-                <div className='col-4'>
-                    <label className='mb-2' htmlFor="selectFilterInput">Szűrés ügyfél szerint:</label>
-                    <select className="form-select inline-block" aria-label="filter select" id="selectFilterInput" value={selectedClient} onChange={(e) => handleSortOrFilter(e)}>
-                        <option defaultValue value="default">Válassz egy ügyfelet</option>
-                        {clients && clients.map((client, i) => (
-                            <option key={client + i} value={client}>
-                                {client}
-                            </option>
-                        ))}
-                    </select>
+                : <><div className='row justify-content-around mt-5 mb-5'>
+                    <div className='col-4'>
+                        <label className='mb-2' htmlFor="selectFilterInput">Szűrés ügyfél szerint:</label>
+                        <select className="form-select inline-block" aria-label="filter select" id="selectFilterInput" value={selectedClient} onChange={(e) => handleSortOrFilter(e)}>
+                            <option defaultValue value="default">Válassz egy ügyfelet</option>
+                            {clients && clients.map((client, i) => (
+                                <option key={client + i} value={client}>
+                                    {client}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+                    
+                    <div className='col-4'>
+                        <label className='mb-2' htmlFor="selectSortInput">Rendezés:</label>
+                        <select  className="form-select"aria-label="sort select" id="selectsortInput" value={selectedSortOption} onChange={(e) => handleSortOrFilter(e)}>
+                            <option defaultValue value="default">Válassz rendezési módot:</option>
+                            <option value="date-inc">Létrehozás dátuma szerint növekvő</option>
+                            <option value="date-des">Létrehozás dátuma szerint csökkenő</option>
+                            <option value="due-date-inc">Határidő szerint növekvő</option>
+                            <option value="due-date-des">Határidő szerint csökkenő</option>
+                        </select>
+                    </div>
                 </div>
-                
-                <div className='col-4'>
-                    <label className='mb-2' htmlFor="selectSortInput">Rendezés:</label>
-                    <select  className="form-select"aria-label="sort select" id="selectsortInput" value={selectedSortOption} onChange={(e) => handleSortOrFilter(e)}>
-                        <option defaultValue value="default">Válassz rendezési módot:</option>
-                        <option value="date-inc">Létrehozás dátuma szerint növekvő</option>
-                        <option value="date-des">Létrehozás dátuma szerint csökkenő</option>
-                        <option value="due-date-inc">Határidő szerint növekvő</option>
-                        <option value="due-date-des">Határidő szerint csökkenő</option>
-                    </select>
-                </div>
-            </div>
 
-            <table className='table'>
-                <thead>
-                    <tr>
-                        <th>Név</th>
-                        <th>Email</th>
-                        <th>Tárgy</th>
-                        <th>Létrehozva</th>
-                        <th>Határidő</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {sortedOrFilteredTickets && sortedOrFilteredTickets.map((ticket, index) =>
-                        <>
-                            <tr className='table-row' key={index+ticket.name}>
-                                <td>{ticket.name} </td>
-                                <td>{ticket.email} </td>
-                                <td>{ticket.subject} </td>
-                                <td>{ticket.created_at} </td>
-                                <td>{ticket.due_date} </td>
-                            </tr>
-                            <tr className='table-row' key={index+ticket.subject}>
-                                <td colSpan="5"><i className='me-4'>Hiba leírása: </i>{ticket.content} </td>
-                            </tr>
-                        </>
-                    )}
-                </tbody>
-            </table>
+                <table className='table'>
+                    <thead>
+                        <tr>
+                            <th>Név</th>
+                            <th>Email</th>
+                            <th>Tárgy</th>
+                            <th>Létrehozva</th>
+                            <th>Határidő</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {sortedOrFilteredTickets && sortedOrFilteredTickets.map((ticket, index) =>
+                            <>
+                                <tr className='table-row' key={index+ticket.name}>
+                                    <td>{ticket.name} </td>
+                                    <td>{ticket.email} </td>
+                                    <td>{ticket.subject} </td>
+                                    <td>{ticket.created_at} </td>
+                                    <td>{ticket.due_date} </td>
+                                </tr>
+                                <tr className='table-row' key={index+ticket.subject}>
+                                    <td colSpan="5"><i className='me-4'>Hiba leírása: </i>{ticket.content} </td>
+                                </tr>
+                            </>
+                        )}
+                    </tbody>
+                </table></>
+            }
         </div>
     )
 }
