@@ -1,5 +1,10 @@
 # Hibajegy kezelő app
 
+## Felhasznált technológiák
+- Laravel 8.83.27
+- React.js
+- Bootstrap 5.3.0
+
 ## Használatba vétel
 - klónozni kell a repo-t, 
 - composer i
