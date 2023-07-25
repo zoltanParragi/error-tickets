@@ -8,9 +8,9 @@
 ## Használatba vétel
 - klónozni kell a repo-t, 
 - composer i
-- env.example átnevezése: .env, az adatbázis neve: error-tickets
+- .env.example átnevezése: .env, az adatbázis neve: error-tickets
 - php artisan key:generate
-- létre kell hozni egy MySQL iadatbázist, név: error-tickets
+- létre kell hozni egy MySQL adatbázist, név: error-tickets
 - php artisan migrate (Létrejönnek a clients, users, tickets táblák.)
 - DatabaseSeeder.php -ban a kommentek eltávolítása a run() metódusban.  
 - php artisan db:seed (A clients és users táblákban létrejönnek a fake adatok.) 
