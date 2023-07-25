@@ -28,12 +28,9 @@ Route::post('/login', [LoginController::class, 'login'])->name('login');
 
 Route::post('/addticket', [TicketController::class, 'addticket'])->name('addticket');
 
-Route::group(['middleware' => 'auth:sanctum'], function () {
+Route::get('/getclients', [GetdataController::class, 'getclients'])->name('getclients');
 
-    Route::get('/getclients', [GetdataController::class, 'getclients'])->name('getclients');
+Route::get('/gettickets', [GetdataController::class, 'gettickets'])->name('gettickets');
 
-    Route::get('/gettickets', [GetdataController::class, 'gettickets'])->name('gettickets');
-
-    Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-});
+Route::get('/logout', [LoginController::class, 'logout'])->name('logout');
 

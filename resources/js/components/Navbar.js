@@ -1,16 +1,19 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 import { useStateContext } from '../ContextProvider'
+import { useNavigate } from 'react-router-dom';
 
 
 export default function Navbar() {
     const { user, setUser } = useStateContext()
+    const navigate = useNavigate()
 
     const onLogout = (e) => {
         e.preventDefault()
         fetch('/api/logout')
         .then(() => {
             setUser(null)
+            navigate('/')
         })
       }
 
